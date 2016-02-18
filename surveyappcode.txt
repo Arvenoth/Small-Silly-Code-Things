@@ -1,0 +1,95 @@
+let MainPage;
+let DropDownPage;
+let jsonQuestions;
+jsonQuestions = [
+    {
+        question: "question1",
+        answers: [
+            "answer1",
+            "answer2"
+        ]
+    },
+      {
+        question: "question2",
+        answers: [
+            "answer1",
+            "answer2",
+            "answer3"
+        ]
+    }
+];
+
+/*
+DropDownPage = React.createClass({
+    getInitialState () {
+
+        return {};
+    },
+    dropDownMenu (evt) {
+        console.log(evt);
+
+        App.transitionTo("/MainPage");
+    }
+    render () {
+
+        return (
+            <div>
+                <UI.Combobox onChange={this.dropDownMenu.bind(this, this.value)}>
+                    <Option value={0} text="Stuff" />
+                    <Option value={1} text="Stuff2" />
+                </UI.Combobox>
+            </div>
+        );
+    }
+});
+*/
+
+MainPage = React.createClass({
+    getInitialState () {
+        return {
+            currentSelection: [0,0],
+            notes: ""
+        };
+    },
+    changeTextThing (evt) {
+        this.setState({notes: evt});
+    },
+    changeEventThing (selectedIndex, value, index) {
+        var currentSelectionArray;
+        currentSelectionArray = this.state.currentSelection;
+        currentSelectionArray[selectedIndex] = index;
+        this.setState({currentSelection: currentSelectionArray});
+    },
+    render () {
+
+        let questions;
+        let answers;
+        let currentSelectionArray;
+        currentSelectionArray = this.state.currentSelection;
+        console.log(currentSelectionArray);
+
+        questions = jsonQuestions.map( (item, index) => {
+            answers = item.answers.map( (item, index) => {
+                return (<UI.RadioItem value={index}>{item}</UI.RadioItem>);
+            });
+            return (
+                <div>
+                    <div>{item.question}</div>
+                    <UI.RadioGroup onChange={this.changeEventThing.bind(this, index)} selectedIndex={currentSelectionArray[index]}>
+                        {answers}
+                    </UI.RadioGroup>
+                </div>
+            );
+        });
+
+        return (
+            <div>
+                <UI.ScrollContainer>
+                   {questions}
+                </UI.ScrollContainer>
+                <UI.TextInput onChange={this.changeTextThing} value={this.state.notes} placeholder="notes" />
+            </div>
+        );
+    }
+
+});
